@@ -1,86 +1,82 @@
-# Expense Management System
+# 💰 Expense Tracking System
 
-## Project Overview
+A full-stack expense tracking application built with **Streamlit**, **FastAPI**, and **MySQL**. The system allows users to record and update daily expenses, then analyze spending by category and month through an interactive web interface.
 
-The Expense Management System is a Python-based application for recording, managing, and analyzing daily expenses. It uses a Streamlit frontend for the user interface, a FastAPI backend for handling API requests, and MySQL for storing expense data.
-
-## Features
+## ✨ Features
 
 - Add and update daily expenses
-- Select an expense date and retrieve existing records
-- Record expense amount, category, and notes
-- Categorize expenses as Rent, Food, Shopping, Entertainment, or Other
+- Select a date and retrieve existing expenses
+- Record:
+  - Amount
+  - Category
+  - Notes
+- Expense categories:
+  - Rent
+  - Food
+  - Shopping
+  - Entertainment
+  - Other
 - Analyze expenses over a selected date range
-- Calculate total spending and percentage breakdown by category
-- Display analytics using a bar chart and table
-- Log database operations
-- Test database helper functions with Pytest
+- View spending breakdown by category
+- Interactive pie chart and category table
+- View monthly spending
+- Set a monthly budget
+- Calculate:
+  - Monthly budget
+  - Total spent
+  - Average monthly spending
+  - Remaining budget
+  - Budget used percentage
+- Visual monthly spending chart
+- Budget exceeded/remaining status messages
+- FastAPI REST API connecting the frontend to MySQL
+- Database operation logging
+- Automated tests with Pytest
 
-## Technologies Used
+---
 
-- **Python**
-- **Streamlit** — frontend interface
-- **FastAPI** — backend REST API
-- **MySQL** — database
-- **Pandas** — analytics data processing
-- **Pydantic** — request/data validation
-- **Requests** — communication between frontend and backend
-- **Uvicorn** — FastAPI server
-- **Pytest** — testing
+## 🛠️ Technologies Used
 
-## System Workflow
+| Technology | Purpose |
+|---|---|
+| **Python** | Main programming language |
+| **Streamlit** | Web application frontend |
+| **FastAPI** | Backend REST API |
+| **MySQL** | Database |
+| **Pandas** | Data processing and analytics |
+| **Pydantic** | API data validation |
+| **Requests** | Frontend-to-backend communication |
+| **Uvicorn** | FastAPI development server |
+| **Pytest** | Automated testing |
 
-```text
-User
-  ↓
-Streamlit Frontend
-  ↓
-FastAPI Backend
-  ↓
-MySQL Database
-  ↓
-FastAPI Backend
-  ↓
-Streamlit Frontend
-  ↓
-User
-```
+---
 
-### Expense Entry / Update
-
-```text
-Select Date
-    ↓
-Retrieve existing expenses
-    ↓
-Enter or update Amount, Category and Notes
-    ↓
-Submit
-    ↓
-Send data to FastAPI
-    ↓
-Update MySQL database
-    ↓
-Display success/error message
-```
-
-### Analytics
+## 🏗️ System Architecture
 
 ```text
-Select Start Date and End Date
-    ↓
-Request analytics from FastAPI
-    ↓
-Calculate expense totals by category
-    ↓
-Calculate category percentages
-    ↓
-Process results with Pandas
-    ↓
-Display bar chart and table
+                ┌─────────────────────┐
+                │   Streamlit UI      │
+                │     Frontend        │
+                └──────────┬──────────┘
+                           │
+                           │ HTTP Requests
+                           ▼
+                ┌─────────────────────┐
+                │     FastAPI         │
+                │      Backend        │
+                └──────────┬──────────┘
+                           │
+                           │ SQL Queries
+                           ▼
+                ┌─────────────────────┐
+                │       MySQL         │
+                │      Database       │
+                └─────────────────────┘
 ```
 
-## Project Structure
+---
+
+## 📂 Project Structure
 
 ```text
 5_project_two_expense_management/
@@ -88,15 +84,28 @@ Display bar chart and table
 ├── backend/
 │   ├── db_helper.py
 │   ├── logging_setup.py
-│   └── server.py
+│   ├── server.py
+│   └── server.log
 │
 ├── database/
 │   └── expense_db_creation.sql
 │
 ├── frontend/
 │   ├── add_update_ui.py
-│   ├── analytics_ui.py
+│   ├── analytics_by_category.py
+│   ├── analytics_by_months.py
 │   └── app.py
+│
+├── screenshots/
+│   ├── Add_or_Upadate_Tab.png
+│   ├── Analystics_by_ Category_Tab.png
+│   ├── Bar_Chart_and _Table.png
+│   ├── Category_Table.png
+│   ├── Expense Entry & Table.png
+│   ├── Month_of_August.png
+│   ├── Month_of_September.png
+│   ├── Ovaerall_Summary.png
+│   └── Pie_Chart_Category.png
 │
 ├── tests/
 │   ├── backend/
@@ -107,11 +116,25 @@ Display bar chart and table
 └── README.md
 ```
 
-## Database
+> The repository also contains an `exercise_solution/` directory from the original project materials. The application described in this README uses the main `backend/`, `frontend/`, `database/`, and `tests/` directories.
 
-The project uses a MySQL database named `expense_manager`.
+---
 
-The main `expenses` table contains:
+## 🗄️ Database
+
+The application uses a MySQL database named:
+
+```text
+expense_manager
+```
+
+The database creation script is located at:
+
+```text
+database/expense_db_creation.sql
+```
+
+The main `expenses` table stores:
 
 | Column | Description |
 |---|---|
@@ -119,41 +142,47 @@ The main `expenses` table contains:
 | `expense_date` | Date of the expense |
 | `amount` | Expense amount |
 | `category` | Expense category |
-| `notes` | Additional information about the expense |
+| `notes` | Additional information |
 
-The database creation script is available in:
+---
 
-```text
-database/expense_db_creation.sql
-```
-
-## API Endpoints
+## 🔌 API Endpoints
 
 ### Get Expenses
 
-```text
+```http
 GET /expenses/{expense_date}
 ```
 
-Retrieves expenses for a specific date.
+Retrieves expenses recorded for a specific date.
 
 ### Add / Update Expenses
 
-```text
+```http
 POST /expenses/{expense_date}
 ```
 
-Replaces the expenses for the selected date with the submitted expense records.
+Updates the expenses for the selected date.
 
-### Get Analytics
+### Category Analytics
 
-```text
+```http
 POST /analytics/
 ```
 
-Accepts a start date and end date and returns expense totals and percentage breakdowns by category.
+Returns total spending and percentage breakdown by expense category for a selected date range.
 
-## Installation
+### Monthly Analytics
+
+```http
+GET /analytics_by_month/
+```
+
+Returns total spending grouped by month.
+
+---
+
+## ⚙️ Installation & Setup
 
 ### 1. Clone the repository
 
@@ -162,29 +191,49 @@ git clone <your-repository-url>
 cd 5_project_two_expense_management
 ```
 
-### 2. Install dependencies
+### 2. Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Set up MySQL
+### 4. Set up MySQL
 
-Create the database and table using:
+Create the database and `expenses` table using:
 
 ```text
 database/expense_db_creation.sql
 ```
 
-Before running the backend, make sure the MySQL connection details in `backend/db_helper.py` match your local MySQL configuration.
+Then configure the MySQL connection in:
 
-> **Security note:** For a real deployment, database credentials should be stored in environment variables rather than directly in the source code.
+```text
+backend/db_helper.py
+```
 
-## Running the Application
+**Important:** Do not upload database passwords or other secrets to GitHub. Use environment variables or a local configuration file that is excluded through `.gitignore`.
 
-### Start the FastAPI Backend
+---
 
-Open a terminal in the `backend` directory:
+## ▶️ Running the Application
+
+The application requires **two terminals**.
+
+### Terminal 1 — Start the FastAPI backend
+
+From the project root:
 
 ```bash
 cd backend
@@ -197,49 +246,144 @@ The API will run at:
 http://localhost:8000
 ```
 
-### Start the Streamlit Frontend
+### Terminal 2 — Start the Streamlit frontend
 
-Open another terminal from the project root:
+From the project root:
 
 ```bash
 streamlit run frontend/app.py
 ```
 
-The Streamlit application will open in your browser.
+Streamlit will provide a local URL that can be opened in your browser.
 
-## Testing
+---
 
-The project uses Pytest for testing database helper functions.
+## 📊 Application Screenshots
 
-From the project root:
+### Add / Update Expenses
+
+![Add or Update Tab](screenshots/Add_or_Upadate_Tab.png)
+
+### Expense Entry and Table
+
+![Expense Entry and Table](screenshots/Expense%20Entry%20%26%20Table.png)
+
+### Category Analytics
+
+![Analytics by Category](screenshots/Analystics_by_%20Category_Tab.png)
+
+### Category Pie Chart
+
+![Category Pie Chart](screenshots/Pie_Chart_Category.png)
+
+### Category Table
+
+![Category Table](screenshots/Category_Table.png)
+
+### Monthly Analytics
+
+![August](screenshots/Month_of_August.png)
+
+![September](screenshots/Month_of_September.png)
+
+### Overall Budget Summary
+
+![Overall Summary](screenshots/Ovaerall_Summary.png)
+
+### Monthly Bar Chart and Table
+
+![Bar Chart and Table](screenshots/Bar_Chart_and%20_Table.png)
+
+---
+
+## 🧪 Testing
+
+The project uses **Pytest** for automated testing.
+
+Run the tests from the project root:
 
 ```bash
 pytest
 ```
 
-The current test suite includes tests for:
+The current test suite checks functionality including:
 
 - Retrieving expenses for a valid date
-- Retrieving expenses for a date with no records
-- Retrieving an empty analytics summary for an invalid date range
+- Handling dates with no expense records
+- Handling an analytics query with no matching records
 
-## Future Improvements
+---
 
-Possible improvements include:
+## 🔄 Application Workflow
 
-- Moving database credentials to environment variables
-- Adding user authentication
-- Adding more analytics and visualizations
-- Supporting more expense categories
-- Adding monthly and yearly reports
-- Improving error handling and validation
-- Expanding the automated test suite
+### Adding or Updating an Expense
 
-## Documentation
+```text
+Select Date
+     ↓
+Retrieve Existing Expenses
+     ↓
+Enter / Update Amount, Category and Notes
+     ↓
+Submit
+     ↓
+Streamlit sends request to FastAPI
+     ↓
+FastAPI updates MySQL
+     ↓
+Success / Error message displayed
+```
 
-Additional project documentation or a project report can be added to the repository and linked here.
+### Category Analytics
 
-## Author
+```text
+Select Start Date and End Date
+     ↓
+Request data from FastAPI
+     ↓
+Calculate spending by category
+     ↓
+Calculate percentages
+     ↓
+Process data with Pandas
+     ↓
+Display charts and tables
+```
+
+### Monthly Budget Analysis
+
+```text
+Retrieve monthly spending
+     ↓
+Enter Monthly Budget
+     ↓
+Calculate spending and remaining budget
+     ↓
+Calculate budget usage percentage
+     ↓
+Display monthly budget status
+     ↓
+Display monthly spending chart and table
+```
+
+---
+
+## 🚀 Future Improvements
+
+Potential improvements for future versions include:
+
+- Move database credentials to environment variables
+- Add user authentication
+- Add more expense categories
+- Add yearly analytics
+- Add expense search and filtering
+- Expand automated test coverage
+- Add data export functionality
+- Deploy the application online
+
+---
+
+## 👤 Author
 
 **Fortune Sorofa**
 
