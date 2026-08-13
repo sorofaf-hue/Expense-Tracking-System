@@ -188,8 +188,7 @@ Returns total spending grouped by month.
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
-cd "Expense Tracking System"
+https://github.com/sorofaf-hue/Expense-Tracking-System.git
 ```
 
 ### 2. Create a virtual environment
